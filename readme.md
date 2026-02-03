@@ -14,3 +14,4 @@
 - typescript
 
 ## User stories
+- User can login or register
