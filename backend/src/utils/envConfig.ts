@@ -1,0 +1,23 @@
+import dotenv from 'dotenv'
+import z from 'zod'
+dotenv.config()
+
+const envSchema = z.object({
+    NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
+    HOST: z.string().min(1).default('localhost'),
+    PORT: z.coerce.number().int().positive().default(3000),
+    ACCESS_TOKEN_SECRET: z.string().min(64),
+    REFRESH_TOKEN_SECRET: z.string().min(64),
+    DATABASE_URL: z.string()
+})
+
+const parsedEnv = envSchema.safeParse(process.env)
+
+if (!parsedEnv.success) {
+    console.error(`invalid enviroment values`, parsedEnv.error.format())
+    throw new Error("invalid enviroment values")
+}
+
+export const env = {
+    ...parsedEnv.data
+}
